@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { UserPlus, Edit2, Trash2, Camera, Plus } from 'lucide-react';
 import { getClients, createClient, updateClient, deleteClient, getPlans } from '../../../services/api';
 import toast from 'react-hot-toast';
-import { Client, Plans } from '../../../types';
+import { Client, Plans } from '../../../types/index';
 
 function Clients() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -25,6 +25,7 @@ function Clients() {
     googleAPI: '',
     logo: null,
   });
+  
   const [editingId, setEditingId] = useState<string | null | undefined>(null);
 
   // useEffect(() => {

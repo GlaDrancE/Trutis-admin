@@ -1,6 +1,6 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, UserCircle, QrCode, Receipt } from 'lucide-react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Users, UserCircle, QrCode, Receipt, LogOut } from 'lucide-react';
 
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -12,6 +12,12 @@ const navItems = [
 
 function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear(); 
+    navigate('/login'); 
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -32,6 +38,14 @@ function Layout() {
               {label}
             </Link>
           ))}
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-gray-100"
+          >
+            <LogOut className="w-5 h-5 mr-3" />
+            Logout
+          </button>
         </nav>
       </aside>
       <main className="flex-1 p-8 overflow-auto">

@@ -1,43 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Users, UserCircle, QrCode, Receipt } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getStats } from '../../../services/api'
 
 function Dashboard() {
+
+  const [statsData, setStatsData] = useState({
+    totalAgents: 0,
+    totalClients: 0,
+    activeQRCodes: 0,
+    totalPayments: 0,
+  });
+
+
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await getStats();
+        const data = await response.data;
+        console.log(data);
+        
+        setStatsData({
+          totalAgents: data.totalAgents || 0,
+          totalClients: data.totalClients || 0,
+          activeQRCodes: data.activeQRCodes || 0,
+          totalPayments: data.totalPayments || 0,
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+
   const stats = [
     {
       title: 'Total Agents',
-      value: '25',
+      value: statsData.totalAgents,
       icon: Users,
       link: '/agents',
       color: 'bg-blue-500',
     },
     {
       title: 'Total Clients',
-      value: '150',
+      value: statsData.totalClients,
       icon: UserCircle,
       link: '/clients',
       color: 'bg-green-500',
     },
     {
       title: 'Active QR Codes',
-      value: '75',
+      value: statsData.activeQRCodes,
       icon: QrCode,
       link: '/qr-codes',
       color: 'bg-purple-500',
     },
     {
       title: 'Total Payments',
-      value: '$12,450',
+      value: `$${statsData.totalPayments.toLocaleString()}`,
       icon: Receipt,
       link: '/payment-logs',
       color: 'bg-yellow-500',
     },
   ];
 
+
+
+
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
           <Link

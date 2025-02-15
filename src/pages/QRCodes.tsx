@@ -3,7 +3,7 @@ import { QrCode, Plus } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { getQRCodes, generateQRCode } from '../../../services/api';
 import toast from 'react-hot-toast';
-import { QRCode } from '../../../types';
+import { QRCode } from '../../../types/index';
 import { Link } from 'react-router-dom';
 
 function QRCodes() {

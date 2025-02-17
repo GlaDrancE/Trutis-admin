@@ -65,7 +65,7 @@ function QRCodes() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {qrCodes.map((qr) => (
-          <Link to={`/qr-codes/${qr.client_id}`} className={`${!qr.client_id && 'pointer-events-none'}`}>
+          <Link key={qr.id} to={`/qr-codes/${qr.client_id}`} className={`${!qr.client_id && 'pointer-events-none'}`}>
             <div key={qr.id} className={`bg-white p-6 rounded-lg shadow ${qr.client_id ? 'border-2 border-green-400' : 'border-2 border-red-400'}`}>
               <div className="flex justify-center mb-4">
                 <QRCodeCanvas value={`http://localhost:3000/${qr.private_key}`} size={200} />

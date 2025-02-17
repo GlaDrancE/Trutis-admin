@@ -24,36 +24,28 @@ function Clients() {
     plan_title: '',
     googleAPI: '',
     logo: null,
+    maxDiscount: 0,
+    couponValidity: '',
+    minOrderValue: 0,
   });
-  
+
   const [editingId, setEditingId] = useState<string | null | undefined>(null);
 
-  // useEffect(() => {
-  //   if (!isPlansLoad && clients.length >= 0) {
-  //     console.log(isPlansLoad)
-  //     loadPlans();
-  //     setIsPlanLoad(true)
-  //   }
-
-  // }, [clients])
   useEffect(() => {
     loadClients();
   }, []);
+
   const loadPlans = async (clients: Client[]) => {
     try {
       const response = await getPlans();
       setPlans(response.data)
-      // setClients()
-      // console.log(response.data)
       const cl = clients.map(client => {
         const activePlan = response.data.filter((plan: any) =>
-          client.activePlan && plan.id === client.activePlan[0].plan_id
+          client.activePlan && plan.id === client.activePlan[0]?.plan_id
         )
-        return { ...client, plan_title: activePlan ? activePlan[0].title : null }
+        return { ...client, plan_title: activePlan ? activePlan[0]?.title : null }
       })
-      console.log("CLIENTS: ", cl)
       setClients(cl)
-
     } catch (error) {
       toast.error('Failed to load subscription plans');
     }
@@ -62,7 +54,6 @@ function Clients() {
   const loadClients = async () => {
     try {
       const response = await getClients();
-      console.log(response.data)
       loadPlans(response.data)
     } catch (error) {
       toast.error('Failed to load clients');
@@ -84,7 +75,6 @@ function Clients() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData)
     try {
       if (editingId) {
         const updatedClient = await updateClient(editingId, formData);
@@ -96,12 +86,10 @@ function Clients() {
       } else {
         const createdClient = await createClient(formData);
         if (createdClient.status == 201) {
-
           toast.success('Client created successfully');
         }
         else {
           toast.error('Client created successfully');
-
         }
       }
       setIsModalOpen(false);
@@ -127,7 +115,20 @@ function Clients() {
   };
 
   const resetForm = () => {
-    setFormData({ shop_name: '', owner_name: '', email: '', phone: '', password: '', logo: '', plan_id: '', googleAPI: '', address: '' });
+    setFormData({
+      shop_name: '',
+      owner_name: '',
+      email: '',
+      phone: '',
+      password: '',
+      logo: '',
+      plan_id: '',
+      googleAPI: '',
+      address: '',
+      maxDiscount: 0,
+      couponValidity: '',
+      minOrderValue: 0
+    });
     setEditingId(null);
   };
 
@@ -156,7 +157,9 @@ function Clients() {
               <th className="px-6 py-3 text-left text-nowrap">Logo</th>
               <th className="px-6 py-3 text-left text-nowrap">Selected Plan</th>
               <th className="px-6 py-3 text-left text-nowrap">Google API</th>
-
+              <th className="px-6 py-3 text-left text-nowrap">Max Discount</th>
+              <th className="px-6 py-3 text-left text-nowrap">Min Order Value</th>
+              <th className="px-6 py-3 text-left text-nowrap">Coupon Validity</th>
               <th className="px-6 py-3 text-left">Actions</th>
             </tr>
           </thead>
@@ -169,9 +172,13 @@ function Clients() {
                 <td className="px-6 py-4">{client.phone}</td>
                 <td className="px-6 py-4">{client.address}</td>
                 <td className="">
-                  <div className='w-[3rem] h-[3rem] overflow-hidden rounded-full'><img src={client.logo} alt="" className='w-full h-full object-cover' /></div></td>
+                  <div className='w-[3rem] h-[3rem] overflow-hidden rounded-full'><img src={client.logo} alt="" className='w-full h-full object-cover' /></div>
+                </td>
                 <td className="px-6 py-4">{client.plan_title}</td>
                 <td className="px-6 py-4">{client.googleAPI}</td>
+                <td className="px-6 py-4">{client.maxDiscount ? client.maxDiscount + " %"  :  "-"}</td>
+                <td className="px-6 py-4">{client.minOrderValue ? client.minOrderValue + " Orders" : "-"}</td>
+                <td className="px-6 py-4">{client.couponValidity ? client.couponValidity + " days": "-"}</td>
                 <td className="px-6 py-4">
                   <button
                     onClick={() => {
@@ -183,6 +190,9 @@ function Clients() {
                         address: client.address,
                         googleAPI: client.googleAPI,
                         logo: client.logo,
+                        maxDiscount: client.maxDiscount,
+                        couponValidity: client.couponValidity,
+                        minOrderValue: client.minOrderValue,
                       });
                       setEditingId(client.id);
                       setIsModalOpen(true);
@@ -217,7 +227,6 @@ function Clients() {
                     <span className='absolute -bottom-0 -right-0 rounded-full bg-black text-white p-2'>
                       <Camera className='w-4 h-4' />
                     </span></>}
-
                 </label>
                 <input type="file" name="logo" id="logo" onChange={(e) => handleFileChange(e)} className='hidden' accept='image/*' />
               </div>
@@ -278,7 +287,6 @@ function Clients() {
                   </button>
                 </div>
               </div>
-
               <div className="mb-6">
                 <label className="block text-gray-700 mb-2">Phone</label>
                 <input
@@ -327,6 +335,58 @@ function Clients() {
                   <option value="">Select Employment Type</option>
                   {plans.map(plan => (
                     <option value={plan.id}>{plan.title}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Max Discount</label>
+                <div className="flex gap-4">
+                  {[10, 20, 30].map((discount) => (
+                    <label key={discount} className="flex items-center">
+                      <input
+                        type="radio"
+                        name="maxDiscount"
+                        value={discount}
+                        checked={formData.maxDiscount === discount}
+                        onChange={(e) =>
+                          setFormData({ ...formData, maxDiscount: parseFloat(e.target.value) })
+                        }
+                        className="mr-2"
+                      />
+                      {discount}%
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Min Order Value</label>
+                <input
+                  type="number"
+                  value={formData.minOrderValue}
+                  onChange={(e) =>
+                    setFormData({ ...formData, minOrderValue: parseFloat(e.target.value) })
+                  }
+                  className="w-full p-2 border rounded"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Valid Till (Days)</label>
+                <select
+                  value={formData.couponValidity}
+                  onChange={(e) =>
+                    setFormData({ ...formData, couponValidity: e.target.value })
+                  }
+                  className="w-full p-2 border rounded"
+                  required
+                >
+                  <option value="">Select Validity</option>
+                  {[7, 15, 30, 60, 90].map((days) => (
+                    <option key={days} value={days}>
+                      {days} days
+                    </option>
                   ))}
                 </select>
               </div>

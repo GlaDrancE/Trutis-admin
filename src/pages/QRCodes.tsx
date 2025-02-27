@@ -13,6 +13,7 @@ function QRCodes() {
     client_id: '',
     amount: 0,
   });
+  const FORMS_BASE_URL = import.meta.env.VITE_FORM_BASE_URL;
 
   useEffect(() => {
     loadQRCodes();
@@ -68,7 +69,7 @@ function QRCodes() {
           <Link key={qr.id} to={`/qr-codes/${qr.client_id}`} className={`${!qr.client_id && 'pointer-events-none'}`}>
             <div key={qr.id} className={`bg-white p-6 rounded-lg shadow ${qr.client_id ? 'border-2 border-green-400' : 'border-2 border-red-400'}`}>
               <div className="flex justify-center mb-4">
-                <QRCodeCanvas value={`http://localhost:3000/${qr.private_key}`} size={200} />
+                <QRCodeCanvas value={`${FORMS_BASE_URL}/${qr.private_key}`} size={200} />
               </div>
               <div className="text-center">
                 <p className="text-gray-600 mb-2">Client ID: {qr.private_key}</p>

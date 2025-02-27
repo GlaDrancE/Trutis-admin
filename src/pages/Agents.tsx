@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { UserPlus, Edit2, Trash2 } from 'lucide-react';
-import { getAgents, createAgent, updateAgent, deleteAgent } from '../../../services/api';
+import { getAgents, createAgent, updateAgent, deleteAgent } from '../../services/api';
 import toast from 'react-hot-toast';
-import { Agent } from '../../../types/index';
+import { Agent } from '../../types/index';
 
 function Agents() {
   const [agents, setAgents] = useState<Agent[]>([]);

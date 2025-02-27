@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getPaymentLogs } from '../../../services/api';
+import { getPaymentLogs } from '../../services/api';
 import toast from 'react-hot-toast';
-import { PaymentLog } from '../../../types/index';
+import { PaymentLog } from '../../types/index';
 
 function PaymentLogs() {
   const [logs, setLogs] = useState<PaymentLog[]>([]);

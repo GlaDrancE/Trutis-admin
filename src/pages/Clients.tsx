@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { UserPlus, Edit2, Trash2, Camera, Plus } from 'lucide-react';
-import { getClients, createClient, updateClient, deleteClient, getPlans } from '../../../services/api';
+import { getClients, createClient, updateClient, deleteClient, getPlans } from '../../services/api';
 import toast from 'react-hot-toast';
-import { Client, Plans } from '../../../types/index';
+import { Client, Plans } from '../../types/index';
 
 function Clients() {
   const [clients, setClients] = useState<Client[]>([]);
@@ -176,9 +176,9 @@ function Clients() {
                 </td>
                 <td className="px-6 py-4">{client.plan_title}</td>
                 <td className="px-6 py-4">{client.googleAPI}</td>
-                <td className="px-6 py-4">{client.maxDiscount ? client.maxDiscount + " %"  :  "-"}</td>
+                <td className="px-6 py-4">{client.maxDiscount ? client.maxDiscount + " %" : "-"}</td>
                 <td className="px-6 py-4">{client.minOrderValue ? client.minOrderValue + " Orders" : "-"}</td>
-                <td className="px-6 py-4">{client.couponValidity ? client.couponValidity + " days": "-"}</td>
+                <td className="px-6 py-4">{client.couponValidity ? client.couponValidity + " days" : "-"}</td>
                 <td className="px-6 py-4">
                   <button
                     onClick={() => {

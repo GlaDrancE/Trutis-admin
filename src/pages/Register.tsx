@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserPlus } from 'lucide-react';
-import { register } from '../../../services/api';
+import { register } from '../../services/api';
 import toast from 'react-hot-toast';
 
 function Register() {

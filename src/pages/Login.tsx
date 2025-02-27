@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
-import { login } from '../../../services/api';
+import { login } from '../../services/api';
 import toast from 'react-hot-toast';
 
 function Login() {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Users, UserCircle, QrCode, Receipt } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getStats } from '../../../services/api'
+import { getStats } from '../../services/api'
 
 function Dashboard() {
 
@@ -20,7 +20,7 @@ function Dashboard() {
         const response = await getStats();
         const data = await response.data;
         console.log(data);
-        
+
         setStatsData({
           totalAgents: data.totalAgents || 0,
           totalClients: data.totalClients || 0,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { createAgent, updateAgent } from '../../../services/api';
+import { createAgent, updateAgent } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const CreateAgent = () => {

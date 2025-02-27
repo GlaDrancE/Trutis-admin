@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge';
 import { Building2, User, Phone, Mail, MapPin, CreditCard, Calendar, Users, Tag } from 'lucide-react';
 import { useParams } from 'react-router-dom';
-import { getClient } from '../../../services/api';
+import { getClient } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const ClientDetails = () => {

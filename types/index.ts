@@ -48,6 +48,12 @@ export interface Client {
   customer_id?: string;
   activePlan?: ActivePlan[];
 }
+export interface ClientSignUp {
+  email: string;
+  owner_name: string;
+  password: string;
+  phone: string;
+}
 
 export interface QRCode {
   id: string;

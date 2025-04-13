@@ -2,12 +2,14 @@ import axios from "axios";
 import { Agent, Client, ClientSignUp } from "../types";
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL || 'http://localhost:3000/api',
+    baseURL: import.meta.env.VITE_BASE_URL || 'http://localhost:3000/api/v1/api',
 
 });
-
+const paymentApi = axios.create({
+    baseURL: import.meta.env.VITE_PAYMENT_URL || 'http://localhost:3000/api/v1/payment'
+})
 const authApi = axios.create({
-    baseURL: import.meta.env.VITE_AUTH_URL || 'http://localhost:3000/auth'
+    baseURL: import.meta.env.VITE_AUTH_URL || 'http://localhost:3000/api/v1/auth'
 })
 
 
@@ -152,6 +154,19 @@ export const generateQRCode = (data: { id: string }) =>
 export const getQrId = (token: string) => {
     return api.post("/client/getqrid", { token });
 };
+
+// Payment Logs
+export const getPaymentLogs = () => api.get("/payment-logs");
+
+export const getPlans = () => api.get("/clients/subscription-plans");
+export const createCheckoutSession = (lookup_key: string, clientId: string) => paymentApi.post("/payment/create-checkout-session", { lookup_key, clientId });
+
+
+export const verifyPaymentAndStore = (session_id: string) => paymentApi.post("/payment/verify", { session_id });
+export const portalSession = (customerId: string) => paymentApi.post("/payment/create-portal-session", { customerId });
+
+// Payments
+export const createProducts = (client_id: string) => paymentApi.post("/payment/create-products", { client_id });
 
 
 

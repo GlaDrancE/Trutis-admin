@@ -13,7 +13,7 @@ function QRCodes() {
     client_id: '',
     amount: 0,
   });
-  const FORMS_BASE_URL = import.meta.env.VITE_FORM_BASE_URL;
+  const FORMS_BASE_URL = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
     loadQRCodes();
@@ -73,11 +73,6 @@ function QRCodes() {
               </div>
               <div className="text-center">
                 <p className="text-gray-600 mb-2">Client ID: {qr.private_key}</p>
-                <p className="text-gray-600 mb-2">Amount: ${qr.amount}</p>
-                <p className={`text-sm ${qr.status === 'active' ? 'text-green-600' : 'text-gray-600'
-                  }`}>
-                  Status: {qr.status}
-                </p>
               </div>
             </div>
           </Link>

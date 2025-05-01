@@ -13,7 +13,7 @@ function QRCodes() {
     client_id: '',
     amount: 0,
   });
-  const FORMS_BASE_URL = import.meta.env.VITE_BASE_URL;
+  const FORMS_BASE_URL = import.meta.env.VITE_FORM_URL;
 
   useEffect(() => {
     loadQRCodes();

@@ -63,6 +63,10 @@ export interface QRCode {
   amount: number;
   status: 'active' | 'used';
   created_at: string;
+  Client?: {
+    owner_name: string;
+    shop_name: string;
+  } | null;
 }
 
 export interface PaymentLog {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { QrCode, Plus, Search } from 'lucide-react';
+import { QrCode, Plus, Search, Download } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { getQRCodes, generateQRCode } from '../../services/api';
 import toast from 'react-hot-toast';
@@ -9,12 +9,14 @@ import { Link } from 'react-router-dom';
 function QRCodes() {
   const [qrCodes, setQRCodes] = useState<QRCode[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filteredQRCodes, setFilteredQRCodes] = useState<QRCode[]>([]); 
+  const [filteredQRCodes, setFilteredQRCodes] = useState<QRCode[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [formData, setFormData] = useState({
     client_id: '',
     amount: 0,
   });
+
+  
   const FORMS_BASE_URL = import.meta.env.VITE_FORM_URL;
 
   useEffect(() => {
@@ -76,6 +78,21 @@ function QRCodes() {
     }
   };
 
+  const handleDownload = (privateKey: string) => {
+    const canvas = document.getElementById(`qr-code-${privateKey}`) as HTMLCanvasElement;
+    if (canvas) {
+      const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = pngUrl;
+      downloadLink.download = `qrcode-${privateKey}.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    } else {
+      toast.error('Failed to download QR code');
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -115,7 +132,6 @@ function QRCodes() {
               </button>
             )}
           </div>
-          {/* Generate QR Code Button */}
           <button
             onClick={() => handleSubmit()}
             className="flex items-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -129,24 +145,42 @@ function QRCodes() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredQRCodes.length > 0 ? (
           filteredQRCodes.map((qr) => (
-            <Link key={qr.id} to={`/qr-codes/${qr.client_id}`} className={`${!qr.client_id && 'pointer-events-none'}`}>
-              <div key={qr.id} className={`bg-white p-6 rounded-lg shadow ${qr.client_id ? 'border-2 border-green-400' : 'border-2 border-red-400'}`}>
+            <div
+              key={qr.id}
+              className={`bg-white p-6 rounded-lg shadow ${qr.client_id ? 'border-2 border-green-400' : 'border-2 border-red-400'}`}
+            >
+              {/* QR Code and Details (Wrapped in Link) */}
+              <Link to={`/qr-codes/${qr.client_id}`} className={`${!qr.client_id && 'pointer-events-none'}`}>
                 <div className="flex justify-center mb-4">
-                  <QRCodeCanvas value={`${FORMS_BASE_URL}/${qr.private_key}`} size={200} />
+                  <QRCodeCanvas
+                    id={`qr-code-${qr.private_key}`}
+                    value={`${FORMS_BASE_URL}/${qr.private_key}`}
+                    size={200}
+                  />
                 </div>
                 <div className="text-center">
-                  <p className="text-gray-600">QRCode Id  : {qr.private_key}</p>
+                  <p className="text-gray-600">QRCode Id: {qr.private_key}</p>
                   {qr.client_id && qr.Client ? (
                     <>
                       <p className="text-gray-600">Client Name: {qr.Client.owner_name}</p>
                       <p className="text-gray-600">Shop Name: {qr.Client.shop_name || 'N/A'}</p>
                     </>
-                  ): (
+                  ) : (
                     <p className="text-gray-600">Client: Not Assigned</p>
                   )}
                 </div>
+              </Link>
+              
+              <div className="mt-4 flex justify-center">
+                <button
+                  onClick={() => handleDownload(qr.private_key)}
+                  className="flex items-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 hover:cursor-pointer"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </button>
               </div>
-            </Link>
+            </div>
           ))
         ) : (
           <div className="col-span-full text-center text-gray-600 py-6">
@@ -155,7 +189,7 @@ function QRCodes() {
         )}
       </div>
 
-      {/* {isModalOpen && (
+        {/* {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg w-96">
             <h2 className="text-xl font-bold mb-4">Generate QR Code</h2>
@@ -203,7 +237,8 @@ function QRCodes() {
           </div>
         </div>
       )} */}
-    </div >
+      
+    </div>
   );
 }
 
